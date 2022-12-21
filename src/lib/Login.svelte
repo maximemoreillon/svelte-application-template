@@ -1,4 +1,4 @@
-<form on:submit={login}>
+<form on:submit|preventDefault={login}>
     <Textfield bind:value={credentials.username} label="Username">
         <Icon class="material-icons" slot="leadingIcon">person</Icon>
     </Textfield>
@@ -12,9 +12,14 @@
 </form>
 
 <script lang="ts">
+
 import Textfield from '@smui/textfield';
 import Icon from '@smui/textfield/icon';
 import Button, { Label, Icon as ButtonIcon} from '@smui/button';
+
+import { browser } from '$app/environment';
+import { serialize } from 'cookie'
+
 
 export let options: any
 
@@ -37,9 +42,13 @@ const login = async () => {
     }
     try {
         const res = await fetch(url, opts)
-        const data = await res.json()
+        const {jwt} = await res.json()
 
-        console.log(data)
+        if(!browser) return alert('Not browser')
+
+        // TODO: Cookie options
+        document.cookie = serialize('jwt', jwt)
+        
     } catch (error) {
         
     }
