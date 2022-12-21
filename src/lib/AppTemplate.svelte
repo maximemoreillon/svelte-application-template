@@ -1,3 +1,4 @@
+{#if $currentUser}
 <Drawer variant="modal" fixed={false} bind:open>
     <Header>
       <DrawerTitle>{options.title}</DrawerTitle>
@@ -32,15 +33,15 @@
     </Row>
     </TopAppBar>
     <AutoAdjust {topAppBar}>
-        {#if $currentUser}
+        
         <slot></slot>
-        {:else}
-        <Login options={options}/>
-        {/if}
+        
 
     </AutoAdjust>
 </AppContent>
-
+{:else}
+<Login options={options}/>
+{/if}
 
  
 
