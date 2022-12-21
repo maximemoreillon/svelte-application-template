@@ -75,7 +75,7 @@ import TopAppBar, {
 let topAppBar: TopAppBar;
 let open = false;
 
-export const options = {
+export let options = {
     title: 'Untitled application',
     subtitle: 'An untitled application',
     login_url: 'https://api.users.maximemoreillon.com/v2/auth/login',
