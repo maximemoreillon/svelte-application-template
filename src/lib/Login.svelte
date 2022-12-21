@@ -19,7 +19,7 @@ import Button, { Label, Icon as ButtonIcon} from '@smui/button';
 
 import { browser } from '$app/environment';
 import { serialize } from 'cookie'
-
+import { getCurrentUser } from './auth';
 
 export let options: any
 
@@ -48,6 +48,8 @@ const login = async () => {
 
         // TODO: Cookie options
         document.cookie = serialize('jwt', jwt)
+
+        getCurrentUser()
         
     } catch (error) {
         

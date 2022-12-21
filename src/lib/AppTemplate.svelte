@@ -5,11 +5,14 @@
     </Header>
     <Content>
       <List>
-        <Item
-          href="javascript:void(0)">
-          <Graphic class="material-icons" aria-hidden="true">inbox</Graphic>
-          <Text>Inbox</Text>
-        </Item>
+        {#each options.nav as item}
+            <Item
+                href={item.href}>
+                <Graphic class="material-icons" aria-hidden="true">{item.icon}</Graphic>
+                <Text>{item.label}</Text>
+            </Item>
+        {/each}
+        
       </List>
     </Content>
 </Drawer>
@@ -24,13 +27,16 @@
             <Title>{options.title}</Title>
         </Section>
         <Section align="end" toolbar>
-        <IconButton class="material-icons">logout</IconButton>
+        <IconButton class="material-icons" on:click={logout}>logout</IconButton>
         </Section>
     </Row>
     </TopAppBar>
     <AutoAdjust {topAppBar}>
+        {#if $currentUser}
+        <slot></slot>
+        {:else}
         <Login options={options}/>
-        <!-- <slot></slot> -->
+        {/if}
 
     </AutoAdjust>
 </AppContent>
@@ -41,7 +47,11 @@
 <script lang="ts">
 
 import Login from './Login.svelte';
+import { currentUser, getCurrentUser} from './auth';
+import { serialize, parse } from 'cookie'
+import { browser } from '$app/environment';
 
+import { onMount } from 'svelte';
 
 import List, { Item, Text, Graphic, Separator, Subheader } from '@smui/list';
 import IconButton from '@smui/icon-button';
@@ -67,7 +77,20 @@ let open = false;
 export const options = {
     title: 'Untitled application',
     subtitle: 'An untitled application',
-    login_url: 'https://api.users.maximemoreillon.com/v2/auth/login'
+    login_url: 'https://api.users.maximemoreillon.com/v2/auth/login',
+    nav: [
+        { href:'/', label: 'Home', icon: 'home'}
+    ]
+}
+
+onMount(() => {
+    getCurrentUser()
+})
+
+const logout = () => {
+    if(!browser) throw 'Not browser'
+    document.cookie = serialize('jwt', '', {expires: new Date(0)})
+    getCurrentUser()
 }
 
 </script>
