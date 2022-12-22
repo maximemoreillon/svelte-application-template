@@ -4,8 +4,11 @@ import { parse } from 'cookie'
 
 
 export let currentUser = writable<any>(null);
+export let authenticating = writable<boolean>(false);
 
 export const getCurrentUser = async () => {
+
+    authenticating.set(true)
     try {
 
         if(!browser) throw 'Not browser'
@@ -27,5 +30,7 @@ export const getCurrentUser = async () => {
     } catch (error) {
         console.error(error)
         currentUser.set(undefined)
+    } finally {
+        authenticating.set(false)
     }
 }
